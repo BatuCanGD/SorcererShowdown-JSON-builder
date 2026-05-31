@@ -85,21 +85,29 @@ class DomainBuilderApp:
         ttk.Button(f, text="Export JSON", command=self.export).grid(row=row, columnspan=2, pady=12)
 
     def export(self):
+        is_neutralizer = self.vars["is_neutralizer"].get()
+
         data = {
-            "name": self.vars["name"].get(),
-            "color": ColorMap[self.color_cb.get()].value,
-            "domain_type": self.vars["domain_type"].get(),
-            "refinement": self.vars["refinement"].get(),
-            "is_neutralizer": self.vars["is_neutralizer"].get(),
-            "cost": float(self.vars["cost"].get()),
-            "can_stun": self.vars["can_stun"].get(),
-            "surehit_damage": float(self.vars["surehit_damage"].get())
+            "identity": {
+                "name": self.vars["name"].get(),
+                "color": ColorMap[self.color_cb.get()].value
+            },
+            "config": {
+                "domain_type": self.vars["domain_type"].get(),
+                "refinement": self.vars["refinement"].get(),
+                "is_neutralizer": is_neutralizer,
+                "cost": float(self.vars["cost"].get()),
+                "can_stun": self.vars["can_stun"].get(),
+                "surehit_damage": float(self.vars["surehit_damage"].get())
+            }
         }
 
-        if not data["is_neutralizer"]:
-            data["health"] = float(self.vars["health"].get())
-            data["strength"] = float(self.vars["strength"].get())
-            data["range"] = float(self.vars["range"].get())
+        if not is_neutralizer:
+            data["stats"] = {
+                "health": float(self.vars["health"].get()),
+                "strength": float(self.vars["strength"].get()),
+                "range": float(self.vars["range"].get())
+            }
 
         path = filedialog.asksaveasfilename(defaultextension=".json", initialfile="domains.json")
         if path:

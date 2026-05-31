@@ -288,62 +288,73 @@ class CharacterCreatorApp:
         color_code = ColorMap[color_name].value if color_name in ColorMap.__members__ else "\033[36m"
 
         data = {
-            "name": self.name_entry.get().strip() or "Unnamed Sorcerer",
             "type": char_type,
-            "color": color_code,
-            "ai_type": self.ai_combo.get(),
-            "hp": float(self.hp_spin.get()),
-            "base_attack_damage": float(self.dmg_spin.get()),
+            "identity": {
+                "name": self.name_entry.get().strip() or "Unnamed Sorcerer",
+                "color": color_code
+            },
+            "stats": {
+                "hp": float(self.hp_spin.get())
+            },
+            "config": {
+                "ai_type": self.ai_combo.get(),
+                "attack_damage": float(self.dmg_spin.get())
+            }
         }
 
         if char_type == "Physically Gifted":
-            data["strength"] = float(self.strength_spin.get())
+            data["stats"]["strength"] = float(self.strength_spin.get())
         else:
-            data["ce"] = float(self.ce_spin.get())
-            data["regen"] = float(self.regen_spin.get())
-            data["blackflash_chance"] = int(self.bf_spin.get())
-            data["blackflash_multiplier"] = float(self.bf_mult_spin.get())
+            data["stats"]["ce"] = float(self.ce_spin.get())
+            data["stats"]["regen"] = float(self.regen_spin.get())
+
+            data["sorcery"] = {
+                "kit": {},
+                "tuning": {
+                    "blackflash_chance": int(self.bf_spin.get()),
+                    "blackflash_multiplier": float(self.bf_mult_spin.get()),
+                    "max_reinforcement": float(self.max_reinf_spin.get()),
+                    "max_domain_time": int(self.max_domain_spin.get()),
+                    "domain_limit": int(self.domain_lim_spin.get()),
+                    "max_zone_time": int(self.max_zone_spin.get()),
+                    "max_burnout_time": int(self.burnout_spin.get())
+                }
+            }
 
             if char_type == "Sorcerer":
-                data["rct_proficiency"] = self.rct_combo.get()
-                data["six_eyes"] = self.six_eyes_var.get()
+                rct = self.rct_combo.get()
+                if rct != "None":
+                    data["config"]["can_use_rct"] = True
+                    data["config"]["rct_proficiency"] = rct
+                data["config"]["six_eyes"] = self.six_eyes_var.get()
 
             if char_type == "Cursed Spirit":
-                data["passive_health_regen"] = float(self.passive_regen_spin.get())
+                data["config"]["passive_health_regen"] = float(self.passive_regen_spin.get())
 
             tech = self.tech_combo.get()
-            if tech != "None":
-                data["technique"] = tech
+            if tech != "None": data["sorcery"]["kit"]["technique"] = tech
 
             domain = self.domain_combo.get()
-            if domain != "None":
-                data["domain"] = domain
+            if domain != "None": data["sorcery"]["kit"]["domain"] = domain
 
             counter = self.counter_combo.get()
-            if counter != "None":
-                data["counter_domain"] = counter
+            if counter != "None": data["sorcery"]["kit"]["counter_domain"] = counter
 
             special = self.special_combo.get()
-            if special != "None":
-                data["special"] = special
+            if special != "None": data["sorcery"]["kit"]["special"] = special
 
             shiki = self.shiki_select.GetSelected()
-            if shiki:
-                data["shikigami"] = shiki
-
-            data["max_reinforcement"] = float(self.max_reinf_spin.get())
-            data["max_domain_time"] = int(self.max_domain_spin.get())
-            data["domain_limit"] = int(self.domain_lim_spin.get())
-            data["max_zone_time"] = int(self.max_zone_spin.get())
-            data["max_burnout_time"] = int(self.burnout_spin.get())
+            if shiki: data["sorcery"]["kit"]["shikigami"] = shiki
 
         equipped = self.equipped_combo.get()
-        if equipped != "None":
-            data["equipped_tool"] = equipped
-
         inv = self.inv_select.GetSelected()
-        if inv:
-            data["inventory"] = inv
+
+        if equipped != "None" or inv:
+            data["tools"] = {}
+            if equipped != "None":
+                data["tools"]["equipped_tool"] = equipped
+            if inv:
+                data["tools"]["inventory"] = inv
 
         return data
 

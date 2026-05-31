@@ -49,11 +49,16 @@ class ToolBuilderApp:
 
     def export(self):
         data = {
-            "name": self.name_var.get(),
-            "color": ColorMap[self.color_cb.get()].value,
-            "type": self.type_cb.get(),
-            "damage": float(self.dmg_spin.get() or 0)
+            "identity": {
+                "name": self.name_var.get(),
+                "color": ColorMap[self.color_cb.get()].value
+            },
+            "stats": {
+                "type": self.type_cb.get(),
+                "damage": float(self.dmg_spin.get() or 0)
+            }
         }
+
         path = filedialog.asksaveasfilename(defaultextension=".json", initialfile="cursedtools.json")
         if path:
             with open(path, "w") as fh:
