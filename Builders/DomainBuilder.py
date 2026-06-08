@@ -64,7 +64,7 @@ class DomainBuilderApp:
             self.vars[key] = var
             row += 1
 
-        add_entry("name", "Name:", "Malevolent Shrine")
+        add_entry("name", "Name:", "Custom Domain")
 
         ttk.Label(f, text="Color:").grid(row=row, column=0, sticky="w")
         self.color_cb = ttk.Combobox(f, values=[c.name for c in ColorMap], state="readonly")
@@ -76,8 +76,8 @@ class DomainBuilderApp:
         add_combo("refinement", "Refinement:", ["Unstable", "Crude", "Refined", "Absolute"], "Refined")
         add_check("is_neutralizer", "Is Neutralizer (Simple Domain/HWB)")
         add_spin("health", "Health:", 500.0)
-        add_spin("strength", "Strength:", 200.0)
-        add_spin("range", "Range:", 15.0)
+        add_spin("strength", "Strength:", 100.0)
+        add_spin("range", "Range:", 15)
         add_spin("cost", "Cost (CE):", 1500.0)
         add_check("can_stun", "Can Stun")
         add_spin("surehit_damage", "Sure-hit Damage:", 100.0)
@@ -106,7 +106,7 @@ class DomainBuilderApp:
             data["stats"] = {
                 "health": float(self.vars["health"].get()),
                 "strength": float(self.vars["strength"].get()),
-                "range": float(self.vars["range"].get())
+                "range": int(self.vars["range"].get())
             }
 
         path = filedialog.asksaveasfilename(defaultextension=".json", initialfile="domains.json")
