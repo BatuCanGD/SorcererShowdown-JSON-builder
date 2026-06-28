@@ -326,6 +326,8 @@ class CharacterCreatorApp:
                 if rct != "None":
                     data["config"]["can_use_rct"] = True
                     data["config"]["rct_proficiency"] = rct
+                else:
+                    data["config"]["can_use_rct"] = False
                 data["config"]["six_eyes"] = self.six_eyes_var.get()
 
             if char_type == "Cursed Spirit":
